@@ -1,14 +1,15 @@
 import axios from 'axios';
 
 // Determine API base URL
+const RAILWAY_BACKEND = 'https://skill-tracking-platform-production.up.railway.app';
+
 let BASE = import.meta.env.VITE_API_BASE;
 if (!BASE) {
-  // Default to current origin (Vite proxy should handle /api)
-  // But in development, if not proxied, try port 8000
-  if (import.meta.env.DEV && window.location.port === '5173') {
+  if (import.meta.env.DEV) {
     BASE = 'http://localhost:8000';
   } else {
-    BASE = '';
+    // Production fallback — Railway backend
+    BASE = RAILWAY_BACKEND;
   }
 }
 
