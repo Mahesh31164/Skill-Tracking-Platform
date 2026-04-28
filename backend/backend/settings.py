@@ -21,8 +21,13 @@ if DEBUG:
     ALLOWED_HOSTS = ['*']
 else:
     _hosts = [h.strip() for h in ALLOWED_HOSTS_ENV.split(',') if h.strip()]
-    # Always allow Render domain
-    _hosts.append('.onrender.com')
+    # Always allow Railway and Vercel domains
+    _hosts += [
+        'skill-tracking-platform-production.up.railway.app',
+        'skill-tracking-platform-pi.vercel.app',
+        '.railway.app',
+        '.vercel.app',
+    ]
     ALLOWED_HOSTS = _hosts
 
 INSTALLED_APPS = [
@@ -142,10 +147,14 @@ if DEBUG:
 else:
     CORS_ALLOWED_ORIGINS = [
         FRONTEND_URL,
+        'https://skill-tracking-platform-pi.vercel.app',
+        'http://localhost:5173',
+        'http://localhost:5174',
     ]
-    # Allow any Vercel preview URLs if needed
+    # Allow any Vercel preview URLs
     CORS_ALLOWED_ORIGIN_REGEXES = [
         r'^https://.*\.vercel\.app$',
+        r'^https://.*\.railway\.app$',
     ]
 CORS_ALLOW_CREDENTIALS = True
 
