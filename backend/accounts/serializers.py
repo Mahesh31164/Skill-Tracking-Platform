@@ -36,18 +36,23 @@ class LoginSerializer(serializers.Serializer):
     def validate(self, data):
         username_input = data['username']
         password = data['password']
-        
-        # Try to authenticate with username first
-        user = authenticate(username=username_input, password=password)
-        
-        # If username fails, try email
+
+        # Case-insensitive username lookup first
+        user = None
+        try:
+            user_obj = CustomUser.objects.get(username__iexact=username_input)
+            user = authenticate(username=user_obj.username, password=password)
+        except CustomUser.DoesNotExist:
+            pass
+
+        # If still not found, try email lookup
         if not user:
             try:
-                user_obj = CustomUser.objects.get(email=username_input)
+                user_obj = CustomUser.objects.get(email__iexact=username_input)
                 user = authenticate(username=user_obj.username, password=password)
             except CustomUser.DoesNotExist:
                 pass
-        
+
         if not user:
             raise serializers.ValidationError("Invalid credentials.")
         if not user.is_active:
