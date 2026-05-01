@@ -4,6 +4,15 @@ import { useAuth } from '../context/AuthContext';
 import CustomCursor from '../components/CustomCursor';
 import API from '../services/api';
 
+const BACKEND_URL = import.meta.env.VITE_API_BASE || 'https://skill-tracking-platform-production.up.railway.app';
+
+// Ensure media files always point to the Railway backend, not Vercel
+const getFileUrl = (fileUrl) => {
+    if (!fileUrl) return '#';
+    if (fileUrl.startsWith('http')) return fileUrl;
+    return `${BACKEND_URL}${fileUrl.startsWith('/') ? '' : '/'}${fileUrl}`;
+};
+
 const CATEGORY_COLORS = {
     cloud: '#06b6d4', ai_ml: '#8b5cf6', web: '#3b82f6',
     cyber: '#ef4444', data: '#f59e0b', devops: '#10b981',
@@ -186,7 +195,7 @@ export default function FacultyDashboard() {
                                     {cert.remarks && <div className="cert-card-remarks">💬 {cert.remarks}</div>}
 
                                     <div className="cert-card-actions">
-                                        <a href={cert.file} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm">
+                                        <a href={getFileUrl(cert.file)} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm">
                                             📄 View File
                                         </a>
                                         {cert.status === 'pending' && (
