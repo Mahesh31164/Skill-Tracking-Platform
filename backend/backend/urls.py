@@ -12,6 +12,6 @@ urlpatterns = [
     path('api/certificates/', include('certificates.urls')),
 ]
 
-# Serve media files in development
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Always serve media files (needed for local dev and Railway fallback)
+# In production with Cloudinary, files are served from Cloudinary CDN directly
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
